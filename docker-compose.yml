@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  app:
+    build: .
+    container_name: store
+    depends_on:
+      - postgres
+    ports:
+      - ${COMMON_SERVER_PORT}:${COMMON_SERVER_PORT}
+    env_file:
+      - .env
+
+  postgres:
+    image: postgres:latest
+    container_name: pg
+    depends_on:
+      - minio
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_USER=${DB_USERNAME}
+    volumes:
+      - ./schema:/docker-entrypoint-initdb.d
+
+  minio:
+    image: minio/minio:latest
+    command: server --console-address ":${MINIO_PORT}" /data/
+    ports:
+      - "${MINIO_PORT}:${MINIO_PORT}"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_USERNAME}
+      MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9001/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
