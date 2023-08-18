@@ -1,6 +1,10 @@
 package service
 
-import files_portal "github.com/salesforceanton/files-portal/pkg/domain"
+import (
+	"github.com/salesforceanton/files-portal/internal/config"
+	"github.com/salesforceanton/files-portal/internal/repository"
+	files_portal "github.com/salesforceanton/files-portal/pkg/domain"
+)
 
 type Service struct {
 	Authorization
@@ -9,8 +13,8 @@ type Service struct {
 
 type Authorization interface {
 	CreateUser(user files_portal.User) (int, error)
-	GenerateToken(user files_portal.User) (string, error)
-	ParseToken(token string) error
+	GenerateAccesssToken(username, password string) (string, error)
+	ParseToken(token string) (int, error)
 }
 
 type Files interface {
@@ -18,9 +22,9 @@ type Files interface {
 	GetFiles(userId int) ([]files_portal.File, error)
 }
 
-// func NewService(repos repository.Repository) *Service {
-// 	return &Service{
-// 		Authorization: NewAuthPostgres(db),
-// 		Files:         NewFilesPostgres(db),
-// 	}
-// }
+func NewService(repos *repository.Repository, cfg *config.Config) *Service {
+	return &Service{
+		Authorization: NewAuthService(repos.Authorization, cfg),
+		Files:         NewFilesService(repos.Files),
+	}
+}

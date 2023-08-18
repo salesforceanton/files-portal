@@ -13,9 +13,9 @@ func LogHandlerIssue(handler string, err error) {
 	}).Error(err)
 }
 
-func LogExecutionIssue(err error) {
+func LogServerIssue(err error) {
 	logrus.WithFields(logrus.Fields{
-		"handler": "main",
-		"problem": fmt.Sprintf("Error during application running: %s", err.Error()),
+		"point":   "server",
+		"problem": fmt.Sprintf("Server running error: %s", err.Error()),
 	}).Error(err)
 }

@@ -3,7 +3,6 @@ package config
 import (
 	"errors"
 
-	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -37,10 +36,6 @@ const (
 
 // Recieve configuration values from env variables
 func InitConfig() (*Config, error) {
-	if err := godotenv.Load(); err != nil {
-		return nil, errors.New("Error with config initialization")
-	}
-
 	var cfg Config
 	if err := envconfig.Process(COMMON_ENV_PREFIX, &cfg); err != nil {
 		return nil, errors.New("Error with config initialization")

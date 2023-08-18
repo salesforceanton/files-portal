@@ -2,8 +2,11 @@ version: '3.7'
 
 services:
   app:
-    build: .
-    container_name: store
+    image: files-portal-app
+    container_name: files-portal-app
+    build:
+      context: .
+      dockerfile: Dockerfile
     depends_on:
       - postgres
     ports:
