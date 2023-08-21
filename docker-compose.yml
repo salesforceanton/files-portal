@@ -32,7 +32,7 @@ services:
 
   minio:
     image: minio/minio:latest
-    command: server --console-address ":${MINIO_PORT}" /data/
+    command: server --console-address ":${MINIO_CONSOLE_PORT}" /data/
     ports:
       - "${MINIO_PORT}:${MINIO_PORT}"
     environment:

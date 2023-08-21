@@ -43,7 +43,7 @@ func (h *Handler) userIdentity(ctx *gin.Context) {
 func (h *Handler) getUserContext(ctx *gin.Context) (int, error) {
 	userId, ok := ctx.Get(USER_CTX)
 	if !ok {
-		logger.LogHandlerIssue("api/files", errors.New("User id is not found"))
+		logger.LogHandlerIssue("api", errors.New("User id is not found"))
 		NewErrorResponse(ctx, http.StatusInternalServerError, "User id is not found")
 		return 0, errors.New("User id is not found")
 	}

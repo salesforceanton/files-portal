@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/salesforceanton/files-portal/internal/config"
+	filestorage "github.com/salesforceanton/files-portal/internal/file_storage"
 	"github.com/salesforceanton/files-portal/internal/logger"
 	"github.com/salesforceanton/files-portal/internal/repository"
 	"github.com/salesforceanton/files-portal/internal/server"
@@ -25,7 +26,6 @@ func init() {
 }
 
 func main() {
-
 	// Initialize app configuration
 	cfg, err := config.InitConfig()
 	if err != nil {
@@ -40,9 +40,16 @@ func main() {
 		return
 	}
 
+	// Connect to files storage
+	filesStorage, err := filestorage.NewMinioProvider(cfg.Minio, filestorage.PHOTO_BUCKET_NAME)
+	if err != nil {
+		logger.LogServerIssue(err)
+		return
+	}
+
 	// Set dependenties
 	repos := repository.NewRepository(db)
-	service := service.NewService(repos, cfg)
+	service := service.NewService(repos, cfg, filesStorage)
 	handler := handler.NewHandler(service)
 	server := new(server.Server)
 

@@ -29,7 +29,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		files := api.Group("files")
 		{
 			files.GET("/", h.GetAll)
-			files.POST("/", h.Create)
+			files.POST("/", h.Upload)
 		}
 	}
 

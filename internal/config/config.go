@@ -15,6 +15,7 @@ type DatabaseConfig struct {
 }
 
 type MinioConfig struct {
+	Host     string
 	Port     int
 	Username string
 	Password string

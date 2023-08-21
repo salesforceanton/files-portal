@@ -10,6 +10,7 @@ CREATE TABLE files
 (
     id           serial       not null unique,
     size         int          not null,
+    name         varchar(255) not null,
     url          varchar(255) not null,
     created_date timestamp    not null,
     owner_id     int          references users(id) on delete cascade not null

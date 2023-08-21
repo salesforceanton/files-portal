@@ -2,7 +2,6 @@ package repository
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	files_portal "github.com/salesforceanton/files-portal/pkg/domain"
@@ -20,10 +19,10 @@ func (r *FilesPostgres) AddFileInfo(file files_portal.File) (int, error) {
 	var result int
 
 	query := fmt.Sprintf(
-		`INSERT INTO %s (size, url, owner_id, created_date) VALUES ($1, $2, $3, $4) RETURNING id`,
+		`INSERT INTO %s (size, name, url, owner_id, created_date) VALUES ($1, $2, $3, $4) RETURNING id`,
 		FILES_TABLE,
 	)
-	row := r.db.QueryRow(query, file.Size, file.Url, file.OwnerId, time.Now().UTC().String())
+	row := r.db.QueryRow(query, file.Size, file.Name, file.Url, file.OwnerId, file.CreatedDate)
 
 	if err := row.Scan(&result); err != nil {
 		return 0, err
