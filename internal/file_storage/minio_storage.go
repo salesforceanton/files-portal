@@ -32,7 +32,10 @@ func NewMinioProvider(cfg config.MinioConfig, bucketName string) (*MinioProvider
 	}
 
 	// Create bucket
-	err = client.MakeBucket(context.TODO(), bucketName, minio.MakeBucketOptions{})
+	exists, err := client.BucketExists(context.TODO(), bucketName)
+	if !exists {
+		err = client.MakeBucket(context.TODO(), bucketName, minio.MakeBucketOptions{})
+	}
 	if err != nil {
 		return nil, err
 	}

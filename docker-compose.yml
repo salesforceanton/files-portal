@@ -13,6 +13,8 @@ services:
       - ${COMMON_SERVER_PORT}:${COMMON_SERVER_PORT}
     env_file:
       - .env
+    networks:
+      - application
 
   postgres:
     image: postgres:latest
@@ -20,7 +22,9 @@ services:
     depends_on:
       - minio
     ports:
-      - "${DB_PORT}:${DB_PORT}"
+      - ${DB_PORT}:${DB_PORT}
+    expose:
+      - ${DB_PORT}
     env_file:
       - .env
     environment:
@@ -29,12 +33,16 @@ services:
       - POSTGRES_USER=${DB_USERNAME}
     volumes:
       - ./schema:/docker-entrypoint-initdb.d
+    networks:
+      - application
 
   minio:
     image: minio/minio:latest
     command: server --console-address ":${MINIO_CONSOLE_PORT}" /data/
     ports:
-      - "${MINIO_PORT}:${MINIO_PORT}"
+      - ${MINIO_PORT}:${MINIO_PORT}
+    expose:
+      - ${MINIO_PORT}
     environment:
       MINIO_ROOT_USER: ${MINIO_USERNAME}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD}
@@ -43,3 +51,9 @@ services:
       interval: 30s
       timeout: 20s
       retries: 3
+    networks:
+      - application
+
+networks:
+  application:
+    driver: bridge

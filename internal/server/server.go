@@ -14,7 +14,7 @@ type Server struct {
 // Self-configure and run server with defined port
 func (s *Server) Run(port int, handler http.Handler) error {
 	s.httpServer = &http.Server{
-		Addr:           fmt.Sprintf(":%d", port),
+		Addr:           fmt.Sprintf("host.docker.internal:%d", port),
 		Handler:        handler,
 		MaxHeaderBytes: 1 << 20,
 		ReadTimeout:    10 * time.Second,

@@ -13,5 +13,6 @@ FROM alpine:latest
 WORKDIR /root/
 
 COPY --from=builder /github.com/salesforceanton/files-portal/.bin/app .
+EXPOSE 8080
 
 CMD ["./app"]
